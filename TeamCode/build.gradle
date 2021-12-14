@@ -16,6 +16,10 @@ apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 
 dependencies {
+    implementation 'org.ftclib.ftclib:vision:1.2.0' // vision
+    implementation 'org.ftclib.ftclib:core:1.2.1' // core
+
     implementation project(':FtcRobotController')
+    implementation 'androidx.compose.foundation:foundation-layout:1.0.0-beta04'
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 }
