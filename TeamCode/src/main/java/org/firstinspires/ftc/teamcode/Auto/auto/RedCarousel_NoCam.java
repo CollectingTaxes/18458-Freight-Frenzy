@@ -35,7 +35,7 @@ public class RedCarousel_NoCam extends LinearOpMode {
         g1.setPosition(.8);
         g2.setPosition(1);
 
-        double armHeight = 1;
+        double armHeight = 2;
         double hubDistance = 6;
 
         // move camera

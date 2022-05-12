@@ -22,7 +22,7 @@ public class BlueWarehouse_NoCam extends LinearOpMode {
         AutoValues auto = new AutoValues();
         //robot.init(hardwareMap);
 
-        double armHeight = 320;
+        double armHeight = 321;
 
         double hubDistance = 15;
 

@@ -117,7 +117,7 @@ public class BlueWarhouse_Park extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence Trajectory1 = drive.trajectorySequenceBuilder(startPose)
-                .forward(35)
+                .forward(34)
                 .build();
 
 

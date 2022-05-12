@@ -27,7 +27,7 @@ public class BlueWarehouse extends LinearOpMode {
         AutoValues auto = new AutoValues();
         robot.init(hardwareMap);
 
-        double armHeight = 0;
+        double armHeight = 1;
 
         double hubDistance = 0;
 

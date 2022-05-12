@@ -23,7 +23,7 @@ public class BlueCarousel_NoCam extends LinearOpMode {
         //robot.init(hardwareMap);
 
         double armHeight = 1;
-        double hubDistance = 6;
+        double hubDistance = 5;
 
         // move camera
         //robot.Cam.setPosition(auto.CAMERA_BLUE_CAROUSEL_POS);
