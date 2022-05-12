@@ -111,19 +111,20 @@ public class BlueWarhouse_Park extends LinearOpMode {
         waitForStart();
         if(isStopRequested()) return;
 
-        Pose2d startPose = new Pose2d(-11, 64, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(1, 61, Math.toRadians(270));
         ElapsedTime timer = new ElapsedTime();
 
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence Trajectory1 = drive.trajectorySequenceBuilder(startPose)
-                .forward(15)
+                .forward(35)
                 .build();
 
 
         //camera.stopStreaming();
 
         drive.followTrajectorySequence((Trajectory1));
+
 
 
     }

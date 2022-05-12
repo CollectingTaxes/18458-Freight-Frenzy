@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RoadRunner.Drive.RoadrunnerTankDrive;
@@ -12,8 +13,8 @@ import org.firstinspires.ftc.teamcode.RoadRunner.TrajectorySequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.hardware.AutoValues;
 import org.firstinspires.ftc.teamcode.teleops.testing.TuningStart;
 
-@Autonomous(name="BlueCarousel_NoCam", group="Roadrunner Paths")
-public class BlueCarousel_NoCam extends LinearOpMode {
+@Autonomous(name="RedCarousel_NoCam", group="Roadrunner Paths")
+public class RedCarousel_NoCam extends LinearOpMode {
     @Override
     public void runOpMode() {
         TuningStart.initializeTuning();
@@ -21,6 +22,18 @@ public class BlueCarousel_NoCam extends LinearOpMode {
         //Hardware_18458 robot = new Hardware_18458();
         AutoValues auto = new AutoValues();
         //robot.init(hardwareMap);
+
+         Servo g1;
+         Servo g2;
+
+        g1 = hardwareMap.get(Servo.class, "g1" );
+        g2 = hardwareMap.get(Servo.class, "g2" );
+
+        g2.setDirection(Servo.Direction.REVERSE);
+        g1.setDirection(Servo.Direction.REVERSE);
+
+        g1.setPosition(.8);
+        g2.setPosition(1);
 
         double armHeight = 1;
         double hubDistance = 6;
@@ -106,13 +119,13 @@ public class BlueCarousel_NoCam extends LinearOpMode {
 
 
 
-        Pose2d startPose = new Pose2d(-37, 61, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(-32, -61, Math.toRadians(90));
         ElapsedTime timer = new ElapsedTime();
 
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence Trajectory1 = drive.trajectorySequenceBuilder(startPose)
-                .splineTo(new Vector2d(-58, 32), Math.toRadians(270))
+                .splineTo(new Vector2d(-62, -30), Math.toRadians(90))
                 .build();
         //camera.stopStreaming();
 

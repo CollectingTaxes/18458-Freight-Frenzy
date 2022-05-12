@@ -108,19 +108,13 @@ public class RedWarehouse_NoCam extends LinearOpMode {
 
 
 
-        Pose2d startPose = new Pose2d(-11, -60, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(1, -61, Math.toRadians(90));
         ElapsedTime timer = new ElapsedTime();
 
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence Trajectory1 = drive.trajectorySequenceBuilder(startPose)
-                .back(hubDistance)
-                .build();
-
-        TrajectorySequence Trajectory2 = drive.trajectorySequenceBuilder(Trajectory1.end())
-                .forward(hubDistance - 10)
-                .turn(Math.toRadians(100), 2, 2)
-                .back(40)
+                .forward(15)
                 .build();
 
         /*TrajectorySequence Trajectory3 = drive.trajectorySequenceBuilder(Trajectory2.end())
@@ -143,25 +137,6 @@ public class RedWarehouse_NoCam extends LinearOpMode {
         // Run trajectory 1
         drive.followTrajectorySequence((Trajectory1));
 
-        // Drop freight
-        //robot.g1.setPosition(auto.Servo_Open);
-        //robot.g2.setPosition(auto.Servo_Open);
-        sleep(1000);
-
-        // Run trajectory 2
-        drive.followTrajectorySequence((Trajectory2));
-        sleep(2000);
-
-        //return arm
-        //robot.Arm.setTargetPosition((int) auto.Arm_Reset);
-        sleep(2000);
-
-        // Run trajectory 3
-        //drive.followTrajectorySequence((Trajectory3));
-
-
-        // Run Trajectory 4
-        //drive.followTrajectorySequence((Trajectory4));
 
     }
 }

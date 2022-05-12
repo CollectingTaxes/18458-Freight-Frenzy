@@ -54,12 +54,12 @@ public class RoadRunnerDriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-//    public static double kV = 0.0165;
-//    public static double kA = 0.003;
-//    public static double kStatic = 0.02;
-    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
-    public static double kA = 0;
-    public static double kStatic = 0;
+    public static double kV = 0.0165;
+    public static double kA = 0.003;
+    public static double kStatic = 0.02;
+//    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
+//    public static double kA = 0;
+//    public static double kStatic = 0;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -69,10 +69,10 @@ public class RoadRunnerDriveConstants {
      * inches.
      */
     public static double MAX_VEL = 60; // 30
-    public static double MAX_ACCEL = 100; // 30
+    public static double MAX_ACCEL = 60; // 30
 
-    public static double MAX_ANG_VEL = 6; // Measured in radians // old value: 3.5 radians or 200 degrees
-    public static double MAX_ANG_ACCEL = 6.0; // Measured in radians // old value: 3.5 radians or 200 degrees
+    public static double MAX_ANG_VEL = Math.toRadians(300.704076); // Measured in radians // old value: 3.5 radians or 200 degrees
+    public static double MAX_ANG_ACCEL = Math.toRadians(300.704076); // Measured in radians // old value: 3.5 radians or 200 degrees
 
 
     public static double encoderTicksToInches(double ticks) {

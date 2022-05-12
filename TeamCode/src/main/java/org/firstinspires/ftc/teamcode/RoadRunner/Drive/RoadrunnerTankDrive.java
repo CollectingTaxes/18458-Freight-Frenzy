@@ -113,10 +113,6 @@ public class RoadrunnerTankDrive extends TankDrive {
         DcMotorEx leftRear = hardwareMap.get(DcMotorEx.class, "BL");
         DcMotorEx rightRear = hardwareMap.get(DcMotorEx.class, "BR");
         DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "FR");
-        leftFront.setDirection(DcMotorEx.Direction.FORWARD);
-        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
-        leftRear.setDirection(DcMotorEx.Direction.FORWARD);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
         leftMotors = Arrays.asList(leftFront, leftRear);
@@ -139,10 +135,10 @@ public class RoadrunnerTankDrive extends TankDrive {
         }
 
         // reverse any motors using DcMotor.setDirection()
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        leftRear.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        rightRear.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        leftRear.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotor.Direction.FORWARD);
+        rightRear.setDirection(DcMotor.Direction.FORWARD);
 
         // if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
