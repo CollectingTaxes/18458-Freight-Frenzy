@@ -27,7 +27,7 @@ public class BlueCarousel extends LinearOpMode {
         AutoValues auto = new AutoValues();
         robot.init(hardwareMap);
 
-        double armHeight = 1;
+        double armHeight = 2;
         double hubDistance = 0;
 
         // move camera
