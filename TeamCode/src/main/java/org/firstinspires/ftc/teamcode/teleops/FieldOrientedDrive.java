@@ -42,7 +42,7 @@ public class FieldOrientedDrive extends LinearOpMode {
         waitForStart();
         if(isStopRequested()) return;
 
-
+        //TODO: Simplify angles to radians
 
         //my variables stuff
         front_left = hardwareMap.get(DcMotor.class, "FL");

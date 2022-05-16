@@ -18,6 +18,10 @@ import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.acmerobotics.roadrunner.util.Angle;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RoadRunner.TrajectorySequence.sequencesegment.SequenceSegment;
 import org.firstinspires.ftc.teamcode.RoadRunner.TrajectorySequence.sequencesegment.TrajectorySegment;
@@ -27,6 +31,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.TrajectorySequence.sequencesegm
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public class TrajectorySequenceBuilder {
     private final double resolution = 0.25;
@@ -64,13 +69,18 @@ public class TrajectorySequenceBuilder {
     private double lastDurationTraj;
     private double lastDisplacementTraj;
 
+
+    // Justin addded
+    private LinearOpMode opMode;
+
     public TrajectorySequenceBuilder(
             Pose2d startPose,
             Double startTangent,
             TrajectoryVelocityConstraint baseVelConstraint,
             TrajectoryAccelerationConstraint baseAccelConstraint,
             double baseTurnConstraintMaxAngVel,
-            double baseTurnConstraintMaxAngAccel
+            double baseTurnConstraintMaxAngAccel,
+            LinearOpMode opMode
     ) {
         this.baseVelConstraint = baseVelConstraint;
         this.baseAccelConstraint = baseAccelConstraint;
@@ -83,6 +93,8 @@ public class TrajectorySequenceBuilder {
 
         this.currentTurnConstraintMaxAngVel = baseTurnConstraintMaxAngVel;
         this.currentTurnConstraintMaxAngAccel = baseTurnConstraintMaxAngAccel;
+
+        this.opMode = opMode;
 
         sequenceSegments = new ArrayList<>();
 
@@ -111,12 +123,14 @@ public class TrajectorySequenceBuilder {
             TrajectoryVelocityConstraint baseVelConstraint,
             TrajectoryAccelerationConstraint baseAccelConstraint,
             double baseTurnConstraintMaxAngVel,
-            double baseTurnConstraintMaxAngAccel
+            double baseTurnConstraintMaxAngAccel,
+            LinearOpMode opMode
     ) {
         this(
                 startPose, null,
                 baseVelConstraint, baseAccelConstraint,
-                baseTurnConstraintMaxAngVel, baseTurnConstraintMaxAngAccel
+                baseTurnConstraintMaxAngVel, baseTurnConstraintMaxAngAccel,
+                opMode
         );
     }
 
@@ -412,6 +426,49 @@ public class TrajectorySequenceBuilder {
         return this.addDisplacementMarker(currentDisplacement, callback);
     }
 
+    public TrajectorySequenceBuilder run(MarkerCallback callback) {
+        return this.addDisplacementMarker(currentDisplacement, callback);
+    }
+
+    public TrajectorySequenceBuilder runThread(BooleanSupplier stopIsRequested, Runnable runnable) {
+        MarkerCallback callback = () -> new Thread(() -> {
+            if (stopIsRequested.getAsBoolean()) return;
+            runnable.run();
+        }).start();
+
+        return this.addDisplacementMarker(currentDisplacement, callback);
+    }
+
+    public TrajectorySequenceBuilder runCommandGroupAsThread(SequentialCommandGroup sequentialCommandGroup) {
+        MarkerCallback callback = () -> new Thread(() -> {
+            if (!opMode.isStopRequested()) sequentialCommandGroup.initialize();
+
+            while (!opMode.isStopRequested() && !sequentialCommandGroup.isFinished()) {
+                sequentialCommandGroup.execute();
+            }
+        }).start();
+
+        return this.addDisplacementMarker(currentDisplacement, callback);
+    }
+
+    public TrajectorySequenceBuilder runCommandGroupAsThread(SequentialCommandGroup sequentialCommandGroup, double seconds, Runnable stopCommand) {
+        MarkerCallback callback = () -> new Thread(() -> {
+            ElapsedTime elapsedTime = new ElapsedTime();
+            double targetTime = elapsedTime.seconds() + seconds;
+            while (targetTime > elapsedTime.seconds()) {
+                if (!opMode.isStopRequested()) sequentialCommandGroup.initialize();
+
+                while (!opMode.isStopRequested() && !sequentialCommandGroup.isFinished()) {
+                    sequentialCommandGroup.execute();
+                }
+            }
+            stopCommand.run();
+        }).start();
+
+        return this.addDisplacementMarker(currentDisplacement, callback);
+    }
+
+
     public TrajectorySequenceBuilder UNSTABLE_addDisplacementMarkerOffset(double offset, MarkerCallback callback) {
         return this.addDisplacementMarker(currentDisplacement + offset, callback);
     }
@@ -440,6 +497,32 @@ public class TrajectorySequenceBuilder {
         MotionProfile turnProfile = MotionProfileGenerator.generateSimpleMotionProfile(
                 new MotionState(lastPose.getHeading(), 0.0, 0.0, 0.0),
                 new MotionState(lastPose.getHeading() + angle, 0.0, 0.0, 0.0),
+                maxAngVel,
+                maxAngAccel
+        );
+
+        sequenceSegments.add(new TurnSegment(lastPose, angle, turnProfile, Collections.emptyList()));
+
+        lastPose = new Pose2d(
+                lastPose.getX(), lastPose.getY(),
+                Angle.norm(lastPose.getHeading() + angle)
+        );
+
+        currentDuration += turnProfile.duration();
+
+        return this;
+    }
+
+    public TrajectorySequenceBuilder turnTo(double angle) {
+        return turnTo(angle, currentTurnConstraintMaxAngVel, currentTurnConstraintMaxAngAccel);
+    }
+
+    public TrajectorySequenceBuilder turnTo(double angle, double maxAngVel, double maxAngAccel) {
+        pushPath();
+
+        MotionProfile turnProfile = MotionProfileGenerator.generateSimpleMotionProfile(
+                new MotionState(lastPose.getHeading(), 0.0, 0.0, 0.0),
+                new MotionState(angle, 0.0, 0.0, 0.0),
                 maxAngVel,
                 maxAngAccel
         );
