@@ -17,9 +17,4 @@ public class CommandSchedulerWrapper {
     public void addDefault(Runnable toRun) {
         CommandScheduler.getInstance().addButton(toRun);
     }
-
-    private class BooleanButton extends Button {
-        public BooleanButton(BooleanSupplier button) {
-        }
-    }
 }
